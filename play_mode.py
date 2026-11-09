@@ -1,5 +1,5 @@
 from pico2d import *
-from sdl2 import (SDL_KEYDOWN, SDLK_0, SDLK_1, SDLK_2, SDLK_i)
+from sdl2 import (SDL_KEYDOWN, SDLK_0, SDLK_1, SDLK_2, SDLK_i, SDLK_SPACE)
 import game_framework
 import game_world
 from boy import Boy
@@ -54,10 +54,17 @@ def handle_events():
                     selected_item = 0
                 elif event.key == SDLK_1:
                     selected_item = 1
-                    boy.fire_ball()
                 elif event.key == SDLK_2:
                     selected_item = 2
-                    boy.fire_ball('ball41x41.png')
+            continue
+        elif (not paused and event.type == SDL_KEYDOWN and
+              event.key == SDLK_SPACE):
+            if boy.state == 'SLEEP':
+                boy.handle_event(event)
+            elif selected_item == 1:
+                boy.fire_ball()
+            elif selected_item == 2:
+                boy.fire_ball('ball41x41.png')
             continue
         elif paused:
             if event.type == SDL_KEYUP:

@@ -82,11 +82,8 @@ class ItemModeTests(unittest.TestCase):
         play_mode.update()
         self.assertEqual(play_mode.boy.x, 405)
 
-    def test_item_keys_select_expected_projectile(self):
-        for key, filename, selected in (
-                (SDLK_0, None, 0),
-                (SDLK_1, 'ball21x21.png', 1),
-                (SDLK_2, 'ball41x41.png', 2)):
+    def test_item_keys_change_selection_without_firing(self):
+        for key, selected in ((SDLK_0, 0), (SDLK_1, 1), (SDLK_2, 2)):
             with self.subTest(key=key):
                 play_mode.finish()
                 play_mode.init()
@@ -95,21 +92,30 @@ class ItemModeTests(unittest.TestCase):
                 self.send(key)
                 self.assertEqual(play_mode.selected_item, selected)
                 self.assertTrue(play_mode.item_mode)
-                shots = self.balls()
-                self.assertEqual(len(shots), 0 if filename is None else 1)
-                if filename is not None:
-                    self.assertEqual(shots[0].image.filename, filename)
+                self.assertEqual(len(self.balls()), 0)
 
-    def test_zero_selection_persists_until_item_is_selected(self):
+    def test_space_fires_the_persistently_selected_item(self):
         self.send(SDLK_i)
         self.send(SDLK_0)
         self.assertTrue(play_mode.item_mode)
         self.assertEqual(play_mode.selected_item, 0)
+        self.send(SDLK_SPACE)
+        self.assertEqual(len(self.balls()), 0)
+
+        self.send(SDLK_1)
+        self.assertEqual(play_mode.selected_item, 1)
+        self.assertEqual(len(self.balls()), 0)
+        self.assertTrue(play_mode.item_mode)
+        self.send(SDLK_SPACE)
+        self.assertEqual(len(self.balls()), 1)
+        self.assertEqual(self.balls()[0].image.filename, 'ball21x21.png')
 
         self.send(SDLK_2)
         self.assertEqual(play_mode.selected_item, 2)
         self.assertEqual(len(self.balls()), 1)
-        self.assertTrue(play_mode.item_mode)
+        self.send(SDLK_SPACE)
+        self.assertEqual(len(self.balls()), 2)
+        self.assertEqual(self.balls()[1].image.filename, 'ball41x41.png')
 
     def test_item_overlay_stays_until_i_is_pressed_again(self):
         self.send(SDLK_i)
@@ -119,8 +125,13 @@ class ItemModeTests(unittest.TestCase):
 
         self.send(SDLK_i)
         self.assertFalse(play_mode.item_mode)
+        self.send(SDLK_SPACE)
+        self.assertEqual(len(self.balls()), 1)
+        self.assertEqual(self.balls()[0].image.filename, 'ball21x21.png')
 
     def test_pause_and_space_fire_remain_available(self):
+        self.send(SDLK_i)
+        self.send(SDLK_1)
         self.send(SDLK_SPACE)
         self.assertEqual(len(self.balls()), 1)
         self.assertEqual(self.balls()[0].image.filename, 'ball21x21.png')
