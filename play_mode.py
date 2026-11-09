@@ -1,4 +1,5 @@
 from pico2d import *
+from sdl2 import (SDL_KEYDOWN, SDLK_0, SDLK_1, SDLK_2, SDLK_i)
 import game_framework
 import game_world
 from boy import Boy
@@ -74,4 +75,3 @@ def render():
 def finish():
     game_world.clear()
     released_keys.clear()
-
