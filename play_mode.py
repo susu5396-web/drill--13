@@ -1,0 +1,77 @@
+from pico2d import *
+import game_framework
+import game_world
+from boy import Boy
+from grass import Grass
+
+paused = False
+pause_started_at = 0.0
+released_keys = []
+
+
+def toggle_pause():
+    global paused, pause_started_at
+
+    if not paused:
+        paused = True
+        pause_started_at = get_time()
+        released_keys.clear()
+    else:
+        # Exclude paused time from the character's idle timer.
+        boy.idle_started_at += get_time() - pause_started_at
+        paused = False
+        # Apply releases received while paused to avoid stuck movement.
+        for event in released_keys:
+            boy.handle_event(event)
+        released_keys.clear()
+
+
+def handle_events():
+    event_list = get_events()
+    for event in event_list:
+        if event.type == SDL_QUIT:
+            game_framework.quit()
+            return
+        elif event.type == SDL_KEYDOWN and event.key == SDLK_ESCAPE:
+            game_framework.pop_mode()
+            return
+        elif event.type == SDL_KEYDOWN and event.key == SDLK_p:
+            if not getattr(event, 'repeat', 0):
+                toggle_pause()
+        elif paused:
+            if event.type == SDL_KEYUP:
+                released_keys.append(event)
+        else:
+            boy.handle_event(event)
+
+
+
+def init(): #초기화
+    global boy, paused, pause_started_at
+
+    paused = False
+    pause_started_at = 0.0
+    released_keys.clear()
+
+    boy = Boy()
+    game_world.add_oject(boy)
+
+    grass = Grass()
+    game_world.add_oject(grass, 0)
+
+
+
+def update():
+    if not paused:
+        game_world.update()
+
+
+def render():
+    clear_canvas()
+    game_world.render()
+    update_canvas()
+
+def finish():
+    game_world.clear()
+    released_keys.clear()
+
