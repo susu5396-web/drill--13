@@ -8,6 +8,9 @@ from grass import Grass
 paused = False
 pause_started_at = 0.0
 released_keys = []
+item_mode = False
+selected_item = 0
+item_select_image = None
 
 
 def toggle_pause():
@@ -48,10 +51,12 @@ def handle_events():
 
 
 def init(): #초기화
-    global boy, paused, pause_started_at
+    global boy, paused, pause_started_at, item_mode, selected_item
 
     paused = False
     pause_started_at = 0.0
+    item_mode = False
+    selected_item = 0
     released_keys.clear()
 
     boy = Boy()
