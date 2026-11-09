@@ -47,6 +47,9 @@ def handle_events():
         elif event.type == SDL_KEYDOWN and event.key == SDLK_i:
             if not getattr(event, 'repeat', 0):
                 item_mode = not item_mode
+        elif (item_mode and event.type == SDL_KEYDOWN and
+              event.key in (SDLK_0, SDLK_1, SDLK_2)):
+            continue
         elif paused:
             if event.type == SDL_KEYUP:
                 released_keys.append(event)
