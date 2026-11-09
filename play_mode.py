@@ -101,5 +101,10 @@ def render():
     update_canvas()
 
 def finish():
+    global item_mode, selected_item, item_select_image
+
     game_world.clear()
     released_keys.clear()
+    item_mode = False
+    selected_item = 0
+    item_select_image = None
