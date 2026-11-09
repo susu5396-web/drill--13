@@ -4,11 +4,8 @@ import game_world
 
 
 class Ball:
-    image = None
-
-    def __init__(self, x, y, velocity):
-        if Ball.image is None:
-            Ball.image = load_image('ball21x21.png')
+    def __init__(self, x, y, velocity, image_file='ball21x21.png'):
+        self.image = load_image(image_file)
         self.x, self.y = x, y
         self.velocity = velocity
 
