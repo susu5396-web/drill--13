@@ -58,7 +58,8 @@ def handle_events():
                 elif event.key == SDLK_2:
                     selected_item = 2
                     boy.fire_ball('ball41x41.png')
-                item_mode = False
+                if event.key != SDLK_0:
+                    item_mode = False
             continue
         elif paused:
             if event.type == SDL_KEYUP:

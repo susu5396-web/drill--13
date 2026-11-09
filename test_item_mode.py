@@ -94,11 +94,21 @@ class ItemModeTests(unittest.TestCase):
                 self.send(SDLK_i)
                 self.send(key)
                 self.assertEqual(play_mode.selected_item, selected)
-                self.assertFalse(play_mode.item_mode)
+                self.assertEqual(play_mode.item_mode, key == SDLK_0)
                 shots = self.balls()
                 self.assertEqual(len(shots), 0 if filename is None else 1)
                 if filename is not None:
                     self.assertEqual(shots[0].image.filename, filename)
+
+    def test_zero_selection_persists_until_item_is_selected(self):
+        self.send(SDLK_i)
+        self.send(SDLK_0)
+        self.assertTrue(play_mode.item_mode)
+        self.assertEqual(play_mode.selected_item, 0)
+
+        self.send(SDLK_2)
+        self.assertEqual(play_mode.selected_item, 2)
+        self.assertEqual(len(self.balls()), 1)
 
     def test_pause_and_space_fire_remain_available(self):
         self.send(SDLK_SPACE)
