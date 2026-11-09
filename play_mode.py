@@ -56,12 +56,14 @@ def handle_events():
 
 
 def init(): #초기화
-    global boy, paused, pause_started_at, item_mode, selected_item
+    global boy, paused, pause_started_at
+    global item_mode, selected_item, item_select_image
 
     paused = False
     pause_started_at = 0.0
     item_mode = False
     selected_item = 0
+    item_select_image = load_image('item_select.png')
     released_keys.clear()
 
     boy = Boy()
@@ -80,6 +82,8 @@ def update():
 def render():
     clear_canvas()
     game_world.render()
+    if item_mode:
+        item_select_image.draw(400, 300)
     update_canvas()
 
 def finish():
