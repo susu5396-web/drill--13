@@ -31,6 +31,8 @@ def toggle_pause():
 
 
 def handle_events():
+    global item_mode
+
     event_list = get_events()
     for event in event_list:
         if event.type == SDL_QUIT:
@@ -42,6 +44,9 @@ def handle_events():
         elif event.type == SDL_KEYDOWN and event.key == SDLK_p:
             if not getattr(event, 'repeat', 0):
                 toggle_pause()
+        elif event.type == SDL_KEYDOWN and event.key == SDLK_i:
+            if not getattr(event, 'repeat', 0):
+                item_mode = not item_mode
         elif paused:
             if event.type == SDL_KEYUP:
                 released_keys.append(event)
