@@ -49,8 +49,12 @@ def handle_events():
                 item_mode = not item_mode
         elif (item_mode and event.type == SDL_KEYDOWN and
               event.key in (SDLK_0, SDLK_1, SDLK_2)):
-            if not getattr(event, 'repeat', 0) and event.key == SDLK_0:
-                selected_item = 0
+            if not getattr(event, 'repeat', 0):
+                if event.key == SDLK_0:
+                    selected_item = 0
+                elif event.key == SDLK_1:
+                    selected_item = 1
+                    boy.fire_ball()
             continue
         elif paused:
             if event.type == SDL_KEYUP:
