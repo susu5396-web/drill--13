@@ -94,7 +94,7 @@ class ItemModeTests(unittest.TestCase):
                 self.send(SDLK_i)
                 self.send(key)
                 self.assertEqual(play_mode.selected_item, selected)
-                self.assertEqual(play_mode.item_mode, key == SDLK_0)
+                self.assertTrue(play_mode.item_mode)
                 shots = self.balls()
                 self.assertEqual(len(shots), 0 if filename is None else 1)
                 if filename is not None:
@@ -109,6 +109,16 @@ class ItemModeTests(unittest.TestCase):
         self.send(SDLK_2)
         self.assertEqual(play_mode.selected_item, 2)
         self.assertEqual(len(self.balls()), 1)
+        self.assertTrue(play_mode.item_mode)
+
+    def test_item_overlay_stays_until_i_is_pressed_again(self):
+        self.send(SDLK_i)
+        self.send(SDLK_1)
+        self.assertTrue(play_mode.item_mode)
+        self.assertEqual(play_mode.selected_item, 1)
+
+        self.send(SDLK_i)
+        self.assertFalse(play_mode.item_mode)
 
     def test_pause_and_space_fire_remain_available(self):
         self.send(SDLK_SPACE)
