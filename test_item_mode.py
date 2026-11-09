@@ -8,7 +8,7 @@ import grass as grass_module
 import game_world
 import play_mode
 from ball import Ball
-from sdl2 import (SDL_KEYDOWN, SDL_KEYUP, SDLK_0, SDLK_1, SDLK_2, SDLK_i,
+from sdl2 import (SDL_KEYDOWN, SDLK_0, SDLK_1, SDLK_2, SDLK_i,
                   SDLK_p, SDLK_RIGHT, SDLK_SPACE)
 
 
@@ -113,6 +113,15 @@ class ItemModeTests(unittest.TestCase):
 
         self.send(SDLK_p)
         self.assertFalse(play_mode.paused)
+
+    def test_finish_resets_item_state(self):
+        self.send(SDLK_i)
+        play_mode.selected_item = 2
+        play_mode.finish()
+
+        self.assertFalse(play_mode.item_mode)
+        self.assertEqual(play_mode.selected_item, 0)
+        self.assertIsNone(play_mode.item_select_image)
 
 
 if __name__ == '__main__':
