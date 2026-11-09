@@ -75,8 +75,9 @@ def init(): #초기화
 
 
 def update():
-    if not paused:
-        game_world.update()
+    if paused:
+        return
+    game_world.update()
 
 
 def render():
